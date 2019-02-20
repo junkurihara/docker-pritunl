@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   mongodb:
     image: mongo:latest
@@ -10,20 +10,21 @@ services:
     restart: always
 
   pritunl:
-    build: jqtype/pritunl
-    image: pritunl
+    image: jqtype/pritunl
     container_name: pritunl
     restart: always
+    env_file:
+      - pritunl.env
     ports:
-      - "127.0.0.1:80:80"
-      - "127.0.0.1:443:443"
-    command: pritunl start
+      - 80:80 # web
+      - 443:443 # web
+      - 9700:9700 # web
+      - 1194:1194/udp # openvpn
     tty: true
     privileged: true
-    ports:
-      - "127.0.0.1:1194:1194/udp"
     volumes:
       - ./data/pritunl:/var/lib/pritunl
+      - ./log/pritunl:/var/log/pritunl
     links:
       - mongodb
     depends_on:

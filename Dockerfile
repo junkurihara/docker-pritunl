@@ -17,10 +17,11 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287
     && apt-get -y clean \
     && apt -y autoremove
 
-VOLUME /var/lib/pritunl
+COPY ./docker-bin/* /vpn/
+RUN chmod 755 /vpn/*
 
-EXPOSE 443
-EXPOSE 80
+VOLUME ["/var/lib/pritunl", "/var/log/pritunl"]
 
-CMD ["/usr/bin/tail", "-f","/var/log/pritunl.log"]
+EXPOSE 80/tcp 443/tcp 9700/tcp
 
+CMD ["/vpn/start.sh"]
