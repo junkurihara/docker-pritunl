@@ -1,0 +1,30 @@
+version: '2'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo-pritunl
+    expose:
+      - "27017"
+    volumes:
+      - ./data/mongo:/data/db
+    restart: always
+
+  pritunl:
+    build: jqtype/pritunl
+    image: pritunl
+    container_name: pritunl
+    restart: always
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+    command: pritunl start
+    tty: true
+    privileged: true
+    ports:
+      - "127.0.0.1:1194:1194/udp"
+    volumes:
+      - ./data/pritunl:/var/lib/pritunl
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
