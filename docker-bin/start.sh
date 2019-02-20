@@ -7,7 +7,7 @@ echo "Configure MongoDB URI: ${PRITUNL_MONGODB_URI}"
 pritunl set-mongodb $PRITUNL_MONGODB_URI
 
 # setup reverse proxy
-if [ $PRITUNL_REVERSE_PROXY=true ]; then
+if [ ! -z "$PRITUNL_REVERSE_PROXY" ] && [ $PRITUNL_REVERSE_PROXY = true ]; then
     echo "Reverse proxy enabled"
     pritunl set app.reverse_proxy true
     pritunl set app.server_ssl false
@@ -22,7 +22,7 @@ fi
 
 # setup webconsole port
 if [ -z "$PRITUNL_WEBCONSOLE_PORT" ]; then
-    echo "Set webconsole port: ${CONSOLE_PORT}"
+    echo "Set webconsole port: ${WEBCONSOLE_PORT}"
 else
     echo "Set custom webconsole port: ${PRITUNL_WEBCONSOLE_PORT}"
     WEBCONSOLE_PORT=$PRITUNL_WEBCONSOLE_PORT
